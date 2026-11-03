@@ -43,6 +43,10 @@ Then simply ask Antigravity in chat:
 
 Full agent instructions live in [`skills/floorplan/SKILL.md`](skills/floorplan/SKILL.md).
 
+## Credits & Attribution
+
+This project is adapted from the original [Floorplan](https://github.com/haydenschmitty/floorplan) by [Hayden Schmidt](https://github.com/haydenschmitty), tailored specifically for Google Antigravity and the Antigravity IDE.
+
 ## License
 
-MIT © Floorplan Contributors
+MIT © Hayden Schmidt & Floorplan Contributors

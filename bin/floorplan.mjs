@@ -40,3 +40,4 @@ Commands:
 
 const res = spawnSync(process.execPath, [path.join(scripts, script), ...args], { stdio: 'inherit' });
 process.exit(res.status ?? 0);
+
