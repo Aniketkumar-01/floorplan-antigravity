@@ -8,6 +8,8 @@ const scripts = path.resolve(here, '../scripts');
 const [cmd = 'open', ...args] = process.argv.slice(2);
 
 const map = {
+  install: 'install.mjs',
+  uninstall: 'install.mjs',
   scan: 'scan.mjs',
   build: 'build.mjs',
   open: 'open.mjs',
@@ -23,10 +25,12 @@ if (!script) {
   console.log(`Floorplan for Antigravity
 
 Usage:
+  npx floorplan-antigravity [command] [options]
   floorplan [command] [options]
-  npx floorplan-antigravity [command]
 
 Commands:
+  install   Install skill into Antigravity (global or --workspace)
+  uninstall Remove skill from Antigravity
   scan      Scan code, imports and routes
   build     Validate architecture and build map
   open      Open map in browser (default)
@@ -39,6 +43,9 @@ Commands:
   process.exit(1);
 }
 
-const res = spawnSync(process.execPath, [path.join(scripts, script), ...args], { stdio: 'inherit' });
+const passArgs = cmd === 'uninstall' && !args.includes('uninstall') && !args.includes('--uninstall')
+  ? ['uninstall', ...args]
+  : args;
+const res = spawnSync(process.execPath, [path.join(scripts, script), ...passArgs], { stdio: 'inherit' });
 process.exit(res.status ?? 0);
 

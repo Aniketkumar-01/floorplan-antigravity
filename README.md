@@ -8,37 +8,43 @@ Interactive, offline architecture maps for codebases in Antigravity. Generates a
 
 ---
 
-## ⚡ 1-Minute Quick Install
+## ⚡ Quick Install
 
-Install it as an Antigravity skill with a single copy-paste command.
-
-### Option A: Global Install (Recommended)
-Makes the skill available across **all** your workspaces and projects in Antigravity.
-
-**macOS / Linux:**
-```bash
-git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git ~/.gemini/config/skills/floorplan-antigravity
-```
-
-**Windows (PowerShell):**
-```powershell
-git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git "$HOME\.gemini\config\skills\floorplan-antigravity"
-```
-
----
-
-### Option B: Workspace Install
-Only want it in your current project? Run this inside your project root:
+Install it directly into Antigravity with a single command (just like `npx impeccable install`):
 
 ```bash
-git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git .agent/skills/floorplan-antigravity
+npx floorplan-antigravity install
 ```
+
+That's it! It automatically installs the skill into your global Antigravity skills directory (`~/.gemini/config/skills/floorplan-antigravity`).
+
+### Install Options:
+- **Global Install (Default):**
+  ```bash
+  npx floorplan-antigravity install
+  ```
+- **Current Workspace Only (`.agent/skills`):**
+  ```bash
+  npx floorplan-antigravity install --workspace
+  ```
+- **Uninstall:**
+  ```bash
+  npx floorplan-antigravity uninstall
+  ```
+- **Alternative (via Git):**
+  ```bash
+  # macOS / Linux
+  git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git ~/.gemini/config/skills/floorplan-antigravity
+
+  # Windows (PowerShell)
+  git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git "$HOME\.gemini\config\skills\floorplan-antigravity"
+  ```
 
 ---
 
 ## 🚀 How to Use in Antigravity
 
-Once installed, you don't need to memorize any CLI commands. Just chat with Antigravity:
+Once installed, simply ask Antigravity in chat:
 
 | Goal | What to ask in chat |
 | :--- | :--- |
@@ -91,6 +97,7 @@ floorplan open .
 floorplan-antigravity/
 ├── SKILL.md              # Main Antigravity skill definition & instructions
 ├── scripts/              # Fast, zero-dependency Node.js scan & build engine
+│   ├── install.mjs       # 1-command installer (npx floorplan-antigravity install)
 │   ├── scan.mjs          # AST scanner for imports and routes
 │   ├── build.mjs         # Floorplan graph and HTML generator
 │   ├── open.mjs          # Lightweight live server & browser launcher
