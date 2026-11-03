@@ -25,11 +25,11 @@ That's it! It automatically installs the skill into your global Antigravity skil
   ```
 - **Update to Latest Version:**
   ```bash
-  npx floorplan-antigravity update
+  npx floorplan-antigravity@latest update
   ```
 - **Check Version:**
   ```bash
-  npx floorplan-antigravity --version
+  npx floorplan-antigravity@latest --version
   ```
 - **Current Workspace Only (`.agent/skills`):**
   ```bash
