@@ -5,7 +5,8 @@
   "type": "module",
   "main": "./bin/floorplan.mjs",
   "bin": {
-    "floorplan": "./bin/floorplan.mjs"
+    "floorplan": "./bin/floorplan.mjs",
+    "floorplan-antigravity": "./bin/floorplan.mjs"
   },
   "files": [
     "bin",

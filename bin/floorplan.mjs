@@ -24,6 +24,7 @@ if (!script) {
 
 Usage:
   floorplan [command] [options]
+  npx floorplan-antigravity [command]
 
 Commands:
   scan      Scan code, imports and routes
