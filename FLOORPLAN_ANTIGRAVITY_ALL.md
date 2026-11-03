@@ -6,6 +6,7 @@ This document aggregates the complete source code, scripts, references, and view
 
 - [SKILL.md](#skillmd)
 - [scripts/install.mjs](#scriptsinstallmjs)
+- [scripts/serve.mjs](#scriptsservemjs)
 - [scripts/build.mjs](#scriptsbuildmjs)
 - [scripts/describe.mjs](#scriptsdescribemjs)
 - [scripts/open.mjs](#scriptsopenmjs)
@@ -215,6 +216,40 @@ try {
   process.exit(1);
 }
 
+
+`
+
+
+# scripts/serve.mjs
+
+`javascript
+#!/usr/bin/env node
+// Run the floorplan server in the foreground for CLI / webviews
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawn } from 'node:child_process';
+import { parseArgs, mapDir } from './lib/common.mjs';
+
+const args = parseArgs(process.argv.slice(2));
+const root = path.resolve(args._[0] || '.');
+const dir = mapDir(root);
+const serveFile = path.join(dir, 'serve.mjs');
+
+if (!fs.existsSync(serveFile) || !fs.existsSync(path.join(dir, 'index.html'))) {
+  console.error('✗ No built map found. Run "npx floorplan-antigravity build" first.');
+  process.exit(1);
+}
+
+const pass = ['port'].flatMap((k) => (args[k] ? ['--' + k, String(args[k])] : []));
+if (args['no-open']) pass.push('--no-open');
+
+console.log('Starting Floorplan server in foreground (Ctrl+C to stop)...');
+const child = spawn(process.execPath, [serveFile, ...pass], {
+  cwd: root,
+  stdio: 'inherit',
+});
+
+child.on('exit', (code) => process.exit(code ?? 0));
 
 `
 
@@ -901,11 +936,17 @@ if (!status) {
   const pass = ['port'].flatMap((k) => (args[k] ? ['--' + k, String(args[k])] : []));
   if (!args.port && s?.port) pass.push('--port', String(s.port)); // keep the address people have open
   fs.mkdirSync(path.dirname(stateFile), { recursive: true });
-  const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
   const prev = s?.pid;
-  spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
-    cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
-  }).unref();
+  if (process.platform === 'win32') {
+    spawn('cmd.exe', ['/c', 'start', '""', '/b', process.execPath, serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
+      cwd: root, detached: true, stdio: 'ignore'
+    }).unref();
+  } else {
+    const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
+    spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
+      cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
+    }).unref();
+  }
   // wait for the server to listen
   for (let i = 0; i < 100; i++) {
     await sleep(200);
@@ -5995,10 +6036,13 @@ fs.watchFile(path.join(here, 'index.html'), { interval: 1000 }, (cur, prev) => {
 });
 if (idleExit) setInterval(() => { if (!tabs.size && Date.now() - lastTab > idleExit) process.exit(0); }, 60000).unref();
 
+process.stdout?.on?.('error', () => {});
+process.stderr?.on?.('error', () => {});
+
 const server = http.createServer((req, res) => {
   const host = req.headers.host || '';
-  if (!/^127\.0\.0\.1(:[0-9]+)?$|^localhost(:[0-9]+)?$/.test(host)) {
-    res.writeHead(403); return res.end('Floorplan serves only on 127.0.0.1.');
+  if (!/^127\.0\.0\.1(:[0-9]+)?$|^\[::1\](:[0-9]+)?$|^localhost(:[0-9]+)?$/.test(host)) {
+    res.writeHead(403); return res.end('Floorplan serves only locally.');
   }
 
   const url = new URL(req.url, `http://${host || '127.0.0.1'}`);
@@ -6140,11 +6184,11 @@ const server = http.createServer((req, res) => {
 
 let port = wantPort;
 server.on('error', (e) => {
-  if (e.code === 'EADDRINUSE' && port < wantPort + 20) { port++; server.listen(port, '127.0.0.1'); return; }
+  if (e.code === 'EADDRINUSE' && port < wantPort + 20) { port++; server.listen(port); return; }
   console.error(`✗ Couldn't start the map server: ${e.message}`);
   process.exit(1);
 });
-server.listen(port, '127.0.0.1');
+server.listen(port);
 server.on('listening', () => {
   const u = `http://127.0.0.1:${port}`;
   try {

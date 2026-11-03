@@ -54,11 +54,17 @@ if (!status) {
   const pass = ['port'].flatMap((k) => (args[k] ? ['--' + k, String(args[k])] : []));
   if (!args.port && s?.port) pass.push('--port', String(s.port)); // keep the address people have open
   fs.mkdirSync(path.dirname(stateFile), { recursive: true });
-  const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
   const prev = s?.pid;
-  spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
-    cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
-  }).unref();
+  if (process.platform === 'win32') {
+    spawn('cmd.exe', ['/c', 'start', '""', '/b', process.execPath, serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
+      cwd: root, detached: true, stdio: 'ignore'
+    }).unref();
+  } else {
+    const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
+    spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
+      cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
+    }).unref();
+  }
   // wait for the server to listen
   for (let i = 0; i < 100; i++) {
     await sleep(200);

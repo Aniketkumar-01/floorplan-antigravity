@@ -92,10 +92,13 @@ fs.watchFile(path.join(here, 'index.html'), { interval: 1000 }, (cur, prev) => {
 });
 if (idleExit) setInterval(() => { if (!tabs.size && Date.now() - lastTab > idleExit) process.exit(0); }, 60000).unref();
 
+process.stdout?.on?.('error', () => {});
+process.stderr?.on?.('error', () => {});
+
 const server = http.createServer((req, res) => {
   const host = req.headers.host || '';
-  if (!/^127\.0\.0\.1(:[0-9]+)?$|^localhost(:[0-9]+)?$/.test(host)) {
-    res.writeHead(403); return res.end('Floorplan serves only on 127.0.0.1.');
+  if (!/^127\.0\.0\.1(:[0-9]+)?$|^\[::1\](:[0-9]+)?$|^localhost(:[0-9]+)?$/.test(host)) {
+    res.writeHead(403); return res.end('Floorplan serves only locally.');
   }
 
   const url = new URL(req.url, `http://${host || '127.0.0.1'}`);
@@ -237,11 +240,11 @@ const server = http.createServer((req, res) => {
 
 let port = wantPort;
 server.on('error', (e) => {
-  if (e.code === 'EADDRINUSE' && port < wantPort + 20) { port++; server.listen(port, '127.0.0.1'); return; }
+  if (e.code === 'EADDRINUSE' && port < wantPort + 20) { port++; server.listen(port); return; }
   console.error(`✗ Couldn't start the map server: ${e.message}`);
   process.exit(1);
 });
-server.listen(port, '127.0.0.1');
+server.listen(port);
 server.on('listening', () => {
   const u = `http://127.0.0.1:${port}`;
   try {

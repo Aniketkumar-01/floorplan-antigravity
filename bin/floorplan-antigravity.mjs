@@ -33,6 +33,7 @@ const map = {
   scan: 'scan.mjs',
   build: 'build.mjs',
   open: 'open.mjs',
+  serve: 'serve.mjs',
   refresh: 'refresh.mjs',
   plan: 'plan.mjs',
   describe: 'describe.mjs',
@@ -54,7 +55,8 @@ Commands:
   uninstall Remove skill from Antigravity
   scan      Scan code, imports and routes
   build     Validate architecture and build map
-  open      Open map in browser (default)
+  open      Open map in browser / webview (default)
+  serve     Run live server in foreground in terminal
   refresh   Update map with recent changes
   status    Check map status
   describe  Generate worksheets for file descriptions
