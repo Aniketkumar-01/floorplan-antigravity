@@ -1,9 +1,9 @@
 ---
-name: floorplan
+name: floorplan-antigravity
 description: "Draw a floorplan of an app's codebase (one repo or several side by side), an interactive node-graph map where every subsystem, module, file and HTTP route has a human-readable name and a one-line description, connected by the imports and HTTP calls between them, at several zoom levels. It is saved as a self-contained floorplan/index.html in the codebase. Use whenever the user wants to visualize, map, diagram, document or get an architectural overview of a codebase, repo or monorepo, understand how their app works or is connected under the hood, onboard onto unfamiliar code, see how the frontend talks to the backend, or update an existing floorplan. Also use before code exists: when the user shares a PRD or spec, it draws a blueprint planned from the document."
 ---
 
-# Floorplan for Antigravity
+# Floorplan for Antigravity (floorplan-antigravity)
 
 You produce `floorplan/` at the codebase root: an interactive floorplan of the app that anyone can read like a system diagram. Every card shows a human-readable name and a one-line description, with the real file path underneath.
 

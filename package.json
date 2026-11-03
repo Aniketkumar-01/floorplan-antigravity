@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Interactive, offline architecture maps for codebases in Antigravity",
   "type": "module",
-  "main": "./bin/floorplan.mjs",
+  "main": "./bin/floorplan-antigravity.mjs",
   "bin": {
-    "floorplan": "./bin/floorplan.mjs",
-    "floorplan-antigravity": "./bin/floorplan.mjs"
+    "floorplan": "./bin/floorplan-antigravity.mjs",
+    "floorplan-antigravity": "./bin/floorplan-antigravity.mjs"
   },
   "files": [
     "bin",
@@ -15,10 +15,10 @@
     "LICENSE"
   ],
   "scripts": {
-    "scan": "node skills/floorplan/scripts/scan.mjs",
-    "build": "node skills/floorplan/scripts/build.mjs",
-    "open": "node skills/floorplan/scripts/open.mjs",
-    "refresh": "node skills/floorplan/scripts/refresh.mjs"
+    "scan": "node skills/floorplan-antigravity/scripts/scan.mjs",
+    "build": "node skills/floorplan-antigravity/scripts/build.mjs",
+    "open": "node skills/floorplan-antigravity/scripts/open.mjs",
+    "refresh": "node skills/floorplan-antigravity/scripts/refresh.mjs"
   },
   "keywords": [
     "antigravity",

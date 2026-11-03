@@ -33,15 +33,15 @@ floorplan open .
 
 ## Installation as an Antigravity Skill
 
-Place this repository or the `skills/floorplan` directory in either:
-- **Global:** `~/.gemini/config/skills/floorplan/`
-- **Workspace:** `skills/floorplan/` or `.agent/skills/floorplan/`
+Place this repository or the `skills/floorplan-antigravity` directory in either:
+- **Global:** `~/.gemini/config/skills/floorplan-antigravity/`
+- **Workspace:** `skills/floorplan-antigravity/` or `.agent/skills/floorplan-antigravity/`
 
 Then simply ask Antigravity in chat:
 > *"Make me a floorplan of this codebase"*  
 > *"Update the floorplan with recent changes"*
 
-Full agent instructions live in [`skills/floorplan/SKILL.md`](skills/floorplan/SKILL.md).
+Full agent instructions live in [`skills/floorplan-antigravity/SKILL.md`](skills/floorplan-antigravity/SKILL.md).
 
 ## Credits & Attribution
 
