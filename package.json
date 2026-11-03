@@ -1,6 +1,6 @@
 {
   "name": "floorplan-antigravity",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Interactive, offline architecture maps for codebases in Antigravity",
   "type": "module",
   "main": "./bin/floorplan-antigravity.mjs",
