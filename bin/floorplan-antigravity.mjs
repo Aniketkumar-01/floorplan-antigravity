@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
+import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,6 +8,23 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const scripts = path.resolve(here, '../scripts');
 const [cmd = 'open', ...args] = process.argv.slice(2);
+
+if (['--version', '-v', 'version'].includes(cmd) || args.includes('--version') || args.includes('-v')) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(here, '../package.json'), 'utf8'));
+    console.log(`floorplan-antigravity v${pkg.version}`);
+  } catch {
+    console.log('floorplan-antigravity');
+  }
+  const globalPkg = path.join(os.homedir(), '.gemini', 'config', 'skills', 'floorplan-antigravity', 'package.json');
+  if (fs.existsSync(globalPkg)) {
+    try {
+      const g = JSON.parse(fs.readFileSync(globalPkg, 'utf8'));
+      console.log(`Installed skill:       v${g.version} (${path.dirname(globalPkg)})`);
+    } catch {}
+  }
+  process.exit(0);
+}
 
 const map = {
   install: 'install.mjs',

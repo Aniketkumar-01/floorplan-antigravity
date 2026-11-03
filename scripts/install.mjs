@@ -30,9 +30,16 @@ if (isUninstall) {
 }
 
 try {
+  let version = '';
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+    version = pkg.version ? `v${pkg.version}` : '';
+  } catch {}
+
+  const isUpdate = fs.existsSync(path.join(targetDir, 'SKILL.md'));
   fs.mkdirSync(targetDir, { recursive: true });
 
-  const items = ['SKILL.md', 'scripts', 'assets', 'references'];
+  const items = ['SKILL.md', 'package.json', 'scripts', 'assets', 'references'];
   for (const item of items) {
     const src = path.join(ROOT, item);
     const dest = path.join(targetDir, item);
@@ -41,7 +48,7 @@ try {
     }
   }
 
-  console.log(`\n✓ Successfully installed Floorplan for Antigravity!`);
+  console.log(`\n✓ Successfully ${isUpdate ? 'updated' : 'installed'} Floorplan for Antigravity ${version}!`.trim());
   console.log(`  Location: ${targetDir}`);
   console.log(`  Scope:    ${isWorkspace ? 'Current Workspace (.agent/skills)' : 'Global (~/.gemini/config/skills)'}`);
   console.log(`\nYou can now ask Antigravity in chat:`);
