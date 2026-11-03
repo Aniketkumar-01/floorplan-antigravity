@@ -52,3 +52,4 @@ try {
   console.error(`✗ Installation failed: ${err.message}`);
   process.exit(1);
 }
+

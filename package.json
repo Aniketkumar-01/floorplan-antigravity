@@ -1,6 +1,6 @@
 {
   "name": "floorplan-antigravity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interactive, offline architecture maps for codebases in Antigravity",
   "type": "module",
   "main": "./bin/floorplan-antigravity.mjs",
@@ -8,6 +8,15 @@
     "floorplan": "./bin/floorplan-antigravity.mjs",
     "floorplan-antigravity": "./bin/floorplan-antigravity.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aniketkumar-01/floorplan-antigravity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Aniketkumar-01/floorplan-antigravity/issues"
+  },
+  "homepage": "https://github.com/Aniketkumar-01/floorplan-antigravity#readme",
+  "author": "Aniket Kumar",
   "files": [
     "bin",
     "scripts",
