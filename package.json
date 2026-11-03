@@ -10,15 +10,18 @@
   },
   "files": [
     "bin",
-    "skills",
+    "scripts",
+    "assets",
+    "references",
+    "SKILL.md",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "scan": "node skills/floorplan-antigravity/scripts/scan.mjs",
-    "build": "node skills/floorplan-antigravity/scripts/build.mjs",
-    "open": "node skills/floorplan-antigravity/scripts/open.mjs",
-    "refresh": "node skills/floorplan-antigravity/scripts/refresh.mjs"
+    "scan": "node scripts/scan.mjs",
+    "build": "node scripts/build.mjs",
+    "open": "node scripts/open.mjs",
+    "refresh": "node scripts/refresh.mjs"
   },
   "keywords": [
     "antigravity",

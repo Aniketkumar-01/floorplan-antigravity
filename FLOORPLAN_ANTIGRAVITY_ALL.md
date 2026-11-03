@@ -1,4 +1,50 @@
-# Floorplan for Antigravity (floorplan-antigravity) - Complete Codebase & Skill Bundle\n\nThis document aggregates the complete source code, scripts, references, and viewer assets of Floorplan for Antigravity into a single file.\n\n## Table of Contents\n\n- [SKILL.md](#skillmd)\n- [scripts/build.mjs](#scriptsbuildmjs)\n- [scripts/describe.mjs](#scriptsdescribemjs)\n- [scripts/open.mjs](#scriptsopenmjs)\n- [scripts/plan.mjs](#scriptsplanmjs)\n- [scripts/recent.mjs](#scriptsrecentmjs)\n- [scripts/refresh.mjs](#scriptsrefreshmjs)\n- [scripts/scan.mjs](#scriptsscanmjs)\n- [scripts/status.mjs](#scriptsstatusmjs)\n- [scripts/lib/agent.mjs](#scriptslibagentmjs)\n- [scripts/lib/blueprint.mjs](#scriptslibblueprintmjs)\n- [scripts/lib/common.mjs](#scriptslibcommonmjs)\n- [scripts/lib/extract.mjs](#scriptslibextractmjs)\n- [scripts/lib/health.mjs](#scriptslibhealthmjs)\n- [scripts/lib/names.mjs](#scriptslibnamesmjs)\n- [scripts/lib/resolve.mjs](#scriptslibresolvemjs)\n- [scripts/lib/routes.mjs](#scriptslibroutesmjs)\n- [scripts/lib/screens.mjs](#scriptslibscreensmjs)\n- [references/schema.md](#referencesschemamd)\n- [references/blueprint.md](#referencesblueprintmd)\n- [references/choosing-boundaries.md](#referenceschoosingboundariesmd)\n- [references/writing-descriptions.md](#referenceswritingdescriptionsmd)\n- [assets/serve.mjs](#assetsservemjs)\n- [assets/graph-query.js](#assetsgraphqueryjs)\n- [assets/query-cli.mjs](#assetsqueryclimjs)\n- [assets/ui/05-theme.js](#assetsui05themejs)\n- [assets/ui/06-blueprint.js](#assetsui06blueprintjs)\n- [assets/ui/10-glossary.js](#assetsui10glossaryjs)\n- [assets/ui/20-health.js](#assetsui20healthjs)\n- [assets/ui/25-recent.js](#assetsui25recentjs)\n- [assets/ui/30-screens.js](#assetsui30screensjs)\n- [assets/ui/40-tour.js](#assetsui40tourjs)\n- [assets/viewer.html](#assetsviewerhtml)\n\n---\n\n\n# SKILL.md\n\n`markdown\n---
+# Floorplan for Antigravity (floorplan-antigravity) - Complete Codebase & Skill Bundle
+
+This document aggregates the complete source code, scripts, references, and viewer assets of Floorplan for Antigravity into a single file.
+
+## Table of Contents
+
+- [SKILL.md](#skillmd)
+- [scripts/build.mjs](#scriptsbuildmjs)
+- [scripts/describe.mjs](#scriptsdescribemjs)
+- [scripts/open.mjs](#scriptsopenmjs)
+- [scripts/plan.mjs](#scriptsplanmjs)
+- [scripts/recent.mjs](#scriptsrecentmjs)
+- [scripts/refresh.mjs](#scriptsrefreshmjs)
+- [scripts/scan.mjs](#scriptsscanmjs)
+- [scripts/status.mjs](#scriptsstatusmjs)
+- [scripts/lib/agent.mjs](#scriptslibagentmjs)
+- [scripts/lib/blueprint.mjs](#scriptslibblueprintmjs)
+- [scripts/lib/common.mjs](#scriptslibcommonmjs)
+- [scripts/lib/extract.mjs](#scriptslibextractmjs)
+- [scripts/lib/health.mjs](#scriptslibhealthmjs)
+- [scripts/lib/names.mjs](#scriptslibnamesmjs)
+- [scripts/lib/resolve.mjs](#scriptslibresolvemjs)
+- [scripts/lib/routes.mjs](#scriptslibroutesmjs)
+- [scripts/lib/screens.mjs](#scriptslibscreensmjs)
+- [references/schema.md](#referencesschemamd)
+- [references/blueprint.md](#referencesblueprintmd)
+- [references/choosing-boundaries.md](#referenceschoosingboundariesmd)
+- [references/writing-descriptions.md](#referenceswritingdescriptionsmd)
+- [assets/serve.mjs](#assetsservemjs)
+- [assets/graph-query.js](#assetsgraphqueryjs)
+- [assets/query-cli.mjs](#assetsqueryclimjs)
+- [assets/ui/05-theme.js](#assetsui05themejs)
+- [assets/ui/06-blueprint.js](#assetsui06blueprintjs)
+- [assets/ui/10-glossary.js](#assetsui10glossaryjs)
+- [assets/ui/20-health.js](#assetsui20healthjs)
+- [assets/ui/25-recent.js](#assetsui25recentjs)
+- [assets/ui/30-screens.js](#assetsui30screensjs)
+- [assets/ui/40-tour.js](#assetsui40tourjs)
+- [assets/viewer.html](#assetsviewerhtml)
+
+---
+
+
+# SKILL.md
+
+`markdown
+---
 name: floorplan-antigravity
 description: "Draw a floorplan of an app's codebase (one repo or several side by side), an interactive node-graph map where every subsystem, module, file and HTTP route has a human-readable name and a one-line description, connected by the imports and HTTP calls between them, at several zoom levels. It is saved as a self-contained floorplan/index.html in the codebase. Use whenever the user wants to visualize, map, diagram, document or get an architectural overview of a codebase, repo or monorepo, understand how their app works or is connected under the hood, onboard onto unfamiliar code, see how the frontend talks to the backend, or update an existing floorplan. Also use before code exists: when the user shares a PRD or spec, it draws a blueprint planned from the document."
 ---
@@ -99,7 +145,14 @@ Starts the local server in the background and opens `floorplan/index.html` in th
 - Summarize the architecture in 3–5 lines.
 - Highlight any **high-severity Health issues** (exposed secrets, unauthenticated endpoints).
 - Remind the user that cards have copyable **Fix with Antigravity** prompts and that asking questions can be done directly in their Antigravity chat.
-\n`\n\n\n# scripts/build.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/build.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan builder: validate floorplan/architecture.json against the scan, assign every file to a
 // node, attach import/HTTP/external edges, and write floorplan/graph.json + floorplan/index.html.
 //
@@ -575,7 +628,14 @@ report.push(graph.recent
 report.push(`AGENT  ${agent}`);
 if (scan.blueprint) report.push('BLUEPRINT  planned, not built yet: drawn from floorplan/plan.json');
 console.log(report.join('\n'));
-\n`\n\n\n# scripts/describe.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/describe.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan describer: turn the built graph into per-module worksheets that Antigravity (or parallel
 // subagents) uses to write a human-readable name + one-line description for every file and route.
 //
@@ -708,7 +768,14 @@ console.log('Each has a matching skeleton in floorplan/descriptions/<key>.json. 
 console.log(`Audience: ${audience}. Write in ${STYLE}\n`);
 console.log('key'.padEnd(34) + 'files'.padStart(6) + 'routes'.padStart(8) + 'loc'.padStart(8) + '  module');
 for (const w of index.sort((a, b) => b.files - a.files)) console.log(w.key.padEnd(34) + String(w.files).padStart(6) + String(w.routes).padStart(8) + fmtNum(w.loc).padStart(8) + '  ' + w.node);
-\n`\n\n\n# scripts/open.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/open.mjs
+
+`javascript
+#!/usr/bin/env node
 // Show the map to the user after a build or refresh. Reuses this map's server if it's running (open tabs
 // have already reloaded themselves), restarts it if serve.mjs changed, otherwise starts it in the
 // background and opens a browser tab. Prints the URL and how to stop it.
@@ -794,7 +861,14 @@ console.log(health?.cli
   ? `ASK  works: questions run through ${health.engine}${health.version ? ' (' + health.version + ')' : ''}`
   : 'ASK  ask questions directly in your Antigravity chat; the map itself works');
 console.log(`SERVER  runs in the background, updates open tabs when the map is rebuilt, and stops ${IDLE_MINUTES / 60} hours after the last tab closes. Stop it now: node ${rel}/serve.mjs --stop`);
-\n`\n\n\n# scripts/plan.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/plan.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan blueprint: turn floorplan/plan.json (the files, endpoints and connections a system would
 // have, planned from a PRD or a description) into floorplan/.cache/scan.json, the same shape scan.mjs
 // writes for real code. build.mjs then draws it as a blueprint: the same map, marked as planned.
@@ -849,7 +923,14 @@ if (bp.questions.length) out.push(`OPEN QUESTIONS  ${bp.questions.length} (shown
 out.push('');
 out.push(`✓ wrote ${toPosix(path.relative(root, outFile))}. Next: run build.mjs${fs.existsSync(archFile) ? '' : ' once floorplan/architecture.json is written'}.`);
 console.log(out.join('\n'));
-\n`\n\n\n# scripts/recent.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/recent.mjs
+
+`javascript
+#!/usr/bin/env node
 // Facts for marking "recent work" on the map: what changed since the last map (from refresh.mjs),
 // uncommitted changes, and recent commits, each tied to the card it shows up as. Antigravity adds the why
 // (what the user asked for) and writes floorplan/recent-work.json. Read-only.
@@ -929,7 +1010,14 @@ L.push('', 'Write floorplan/recent-work.json (refs: a file path, a node id, or "
   '      "items": [ { "ref": "<file path>", "change": "changed|new", "note": "what changed here, and how it serves the request" } ] } ] }',
   'Then run build.mjs. Use { "tasks": [] } when nothing was worked on.');
 console.log(L.join('\n'));
-\n`\n\n\n# scripts/refresh.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/refresh.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan refresh: bring an existing map up to date without redoing the whole thing.
 // Re-scans, compares against the last build (graph.json), reconciles descriptions/*.json
 // (renames carried over, deleted entries removed, entries whose exports/routes changed flagged
@@ -1105,7 +1193,14 @@ todo.push('Mark recent work: run recent.mjs, rewrite recent-work.json for what w
 L.push('NEXT');
 todo.forEach((t, i) => L.push(`  ${i + 1}. ${t}`));
 console.log(L.join('\n'));
-\n`\n\n\n# scripts/scan.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/scan.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan scanner: discover every repo under a codebase root, list files, extract imports,
 // symbols and HTTP routes/calls, resolve them, and write floorplan/.cache/scan.json.
 // Prints a compact summary meant to be read by Antigravity (the JSON itself can be large).
@@ -1421,7 +1516,14 @@ if (unread.length) {
 }
 line('Next: read references/schema.md, explore entrypoints, then write floorplan/architecture.json and run build.mjs.');
 console.log(out.join('\n'));
-\n`\n\n\n# scripts/status.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# scripts/status.mjs
+
+`javascript
+#!/usr/bin/env node
 // Prints whether a floorplan already exists here and how stale it is. Never fails.
 // usage: node status.mjs [root]
 import fs from 'node:fs';
@@ -1460,7 +1562,14 @@ try {
 } catch (e) {
   console.log(`status unavailable (${e.message})`);
 }
-\n`\n\n\n# scripts/lib/agent.mjs\n\n`javascript\n// Coding agent: Antigravity is the primary agent.
+
+`
+
+
+# scripts/lib/agent.mjs
+
+`javascript
+// Coding agent: Antigravity is the primary agent.
 export const AGENTS = ['antigravity'];
 
 export function detectAgent(args = {}, env = process.env) {
@@ -1468,7 +1577,14 @@ export function detectAgent(args = {}, env = process.env) {
   if (AGENTS.includes(v)) return v;
   return 'antigravity';
 }
-\n`\n\n\n# scripts/lib/blueprint.mjs\n\n`javascript\n// Blueprints: a floorplan of a system that hasn't been built yet, planned from a PRD or a description.
+
+`
+
+
+# scripts/lib/blueprint.mjs
+
+`javascript
+// Blueprints: a floorplan of a system that hasn't been built yet, planned from a PRD or a description.
 //
 // planToScan(plan, root) — turns floorplan/plan.json (the planned files, endpoints and calls, written by
 //                          the agent) into the same scan.json shape scan.mjs writes for real code, so
@@ -1696,7 +1812,14 @@ export function buildPlanHealth({ graph, scan }) {
   for (const i of issues) summary[i.severity]++;
   return { summary, issues: issues.slice(0, 40), review: true };
 }
-\n`\n\n\n# scripts/lib/common.mjs\n\n`javascript\n// Shared helpers: paths, globs, file classification, git, and codebase discovery.
+
+`
+
+
+# scripts/lib/common.mjs
+
+`javascript
+// Shared helpers: paths, globs, file classification, git, and codebase discovery.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -1971,7 +2094,14 @@ export function parseArgs(argv, defaults = {}) {
 }
 
 export const fmtNum = (n) => n >= 10000 ? (n / 1000).toFixed(0) + 'k' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
-\n`\n\n\n# scripts/lib/extract.mjs\n\n`javascript\n// Per-language, regex-based extraction of imports, exported symbols, HTTP routes and HTTP calls.
+
+`
+
+
+# scripts/lib/extract.mjs
+
+`javascript
+// Per-language, regex-based extraction of imports, exported symbols, HTTP routes and HTTP calls.
 // Deliberately approximate: good enough to draw the map, cheap enough to run on any repo.
 
 const lineIndex = (src) => {
@@ -2648,7 +2778,14 @@ function addDocs(src, lang, r) {
     }
   }
 }
-\n`\n\n\n# scripts/lib/health.mjs\n\n`javascript\n// Health check: plain-language warnings about the codebase (secrets, endpoints anyone can call,
+
+`
+
+
+# scripts/lib/health.mjs
+
+`javascript
+// Health check: plain-language warnings about the codebase (secrets, endpoints anyone can call,
 // the usual Supabase / Firebase / Stripe / CORS mistakes, unused files, oversized files), written for
 // people who built an app with AI and don't know its insides. It's a check, not an audit. Precision
 // beats recall: a false alarm costs this audience more than a missed one.
@@ -4052,7 +4189,14 @@ function stemOf(p) {
   const base = p.split('/').pop().replace(/\.[^.]+$/, '');
   return base === 'index' ? p.split('/').slice(-2, -1)[0] : base;
 }
-\n`\n\n\n# scripts/lib/names.mjs\n\n`javascript\n// Fallback human-readable names, used until Antigravity writes real ones in floorplan/descriptions/.
+
+`
+
+
+# scripts/lib/names.mjs
+
+`javascript
+// Fallback human-readable names, used until Antigravity writes real ones in floorplan/descriptions/.
 import path from 'node:path';
 
 const P = path.posix;
@@ -4096,7 +4240,14 @@ export function fallbackRouteName(r) {
 }
 
 export const routeKey = (r) => `${r.method} ${r.path}`;
-\n`\n\n\n# scripts/lib/resolve.mjs\n\n`javascript\n// Resolve import specifiers to files in the codebase, or to named external packages.
+
+`
+
+
+# scripts/lib/resolve.mjs
+
+`javascript
+// Resolve import specifiers to files in the codebase, or to named external packages.
 import fs from 'node:fs';
 import path from 'node:path';
 import { readJsonLoose } from './common.mjs';
@@ -4350,7 +4501,14 @@ export function createResolver(root, files) {
     }
   };
 }
-\n`\n\n\n# scripts/lib/routes.mjs\n\n`javascript\n// Turn per-file route definitions + mounts into full paths, then match HTTP call literals to them.
+
+`
+
+
+# scripts/lib/routes.mjs
+
+`javascript
+// Turn per-file route definitions + mounts into full paths, then match HTTP call literals to them.
 // This is what links a frontend repo to a backend repo when no import connects them.
 
 export const routeSegments = (p) => p.split('/').filter(Boolean).map((s) =>
@@ -4539,7 +4697,14 @@ export function matchCalls(files, routes) {
   return dedupe(out, (e) => `${e.from}|${e.to}|${e.method}|${e.path}`);
 }
 const dir = (p) => p.split('/').slice(0, -1).join('/');
-\n`\n\n\n# scripts/lib/screens.mjs\n\n`javascript\n// Screens: the pages a person can open in the app (Next.js routes, React Router routes, …), so the
+
+`
+
+
+# scripts/lib/screens.mjs
+
+`javascript
+// Screens: the pages a person can open in the app (Next.js routes, React Router routes, …), so the
 // map can be entered from what people recognise ("the checkout page") instead of code layers.
 //
 // findScreens(src, file) — called by scan.mjs for every code/config/docs file with its source.
@@ -5177,7 +5342,14 @@ export function buildScreens({ graph, scan, root }) {
   }
   return list;
 }
-\n`\n\n\n# references/schema.md\n\n`markdown\n# architecture.json schema
+
+`
+
+
+# references/schema.md
+
+`markdown
+# architecture.json schema
 
 `floorplan/architecture.json` describes the structure: subsystems, modules, external services, flows. Names and descriptions for individual files and routes go in `floorplan/descriptions/*.json` instead (see [writing-descriptions.md](writing-descriptions.md)). They're kept separate so parallel agents can write them without conflicts. `build.mjs` checks both against the scan and reports problems by field.
 
@@ -5349,7 +5521,14 @@ A frontend repo and a backend repo side by side:
   ]
 }
 ```
-\n`\n\n\n# references/blueprint.md\n\n`markdown\n# Blueprints: a floorplan of a system that isn't built yet
+
+`
+
+
+# references/blueprint.md
+
+`markdown
+# Blueprints: a floorplan of a system that isn't built yet
 
 A blueprint is the same map, drawn from a plan instead of code. Someone has a PRD, a spec or just a long description of what they want to build, and the map shows every piece they'd need, how the pieces connect, what each screen relies on, and what still has to be decided.
 
@@ -5435,7 +5614,14 @@ When the map is open through its server (open.mjs), the Ask bar has an **Ask / C
 - planned files connected to nothing.
 
 Each has **Resolve on the map** when the map is served (see above), and otherwise **Resolve with Antigravity**, a request to paste into the agent.
-\n`\n\n\n# references/choosing-boundaries.md\n\n`markdown\n# Choosing boundaries
+
+`
+
+
+# references/choosing-boundaries.md
+
+`markdown
+# Choosing boundaries
 
 The board is useful when each chip is something a person would name in a whiteboard conversation. It's useless when it just mirrors the folder tree. Use these heuristics to get there.
 
@@ -5475,7 +5661,14 @@ Pick the 1–3 things the system exists to do (take an order, sync inventory, ru
 - Does the top-level board, read left to right, tell the system's story (UI → API → services → data/externals)?
 - Is any chip connected to almost everything? That's either a shared kit (fine, label it) or a sign the boundary is wrong.
 - Are there traces you didn't expect, like the frontend importing backend code, or tests that are imported by production code? Mention them to the user; they're often the most valuable finding.
-\n`\n\n\n# references/writing-descriptions.md\n\n`markdown\n# Writing names and descriptions
+
+`
+
+
+# references/writing-descriptions.md
+
+`markdown
+# Writing names and descriptions
 
 Every card on the map shows a **name** and a **description**. The file path and route path are still shown, but in small type underneath. The goal is that someone who has never seen the code can read the board like a system diagram.
 
@@ -5631,7 +5824,14 @@ For `"developers"`, the ✗ column is closer to right (minus the filler). Same r
 ## Quality bar
 
 A good description lets someone pick the right file to open without opening the others. If two siblings end up with nearly identical descriptions, find what actually distinguishes them and say that. For `"everyone"`, also check: would the owner understand every word without asking?
-\n`\n\n\n# assets/serve.mjs\n\n`javascript\n#!/usr/bin/env node
+
+`
+
+
+# assets/serve.mjs
+
+`javascript
+#!/usr/bin/env node
 // floorplan/serve.mjs: serve this map locally with live reload for Antigravity IDE.
 // usage: node floorplan/serve.mjs [--port 4378] [--no-open] [--idle-exit <minutes>]
 //        node floorplan/serve.mjs --stop
@@ -5800,7 +6000,14 @@ server.on('listening', () => {
     try { spawn(opener[0], opener[1], { stdio: 'ignore', detached: true }).unref(); } catch {}
   }
 });
-\n`\n\n\n# assets/graph-query.js\n\n`javascript\n// floorplan graph queries, shared by the viewer and by floorplan/query.mjs. Plain script: no imports, no exports.
+
+`
+
+
+# assets/graph-query.js
+
+`javascript
+// floorplan graph queries, shared by the viewer and by floorplan/query.mjs. Plain script: no imports, no exports.
 // Item ids: n:<node id>  f:<file path>  r:<route index>  s:<file path>#<export index>
 
 function createGraphQuery(G) {
@@ -6059,7 +6266,14 @@ function floorplanAskInstructions(G, engine) {
     'Only use ids that the map gave you.',
   ].filter(Boolean).join('\n');
 }
-\n`\n\n\n# assets/query-cli.mjs\n\n`javascript\n// floorplan/query.mjs: look things up in this folder's graph.json. Generated by build.mjs.
+
+`
+
+
+# assets/query-cli.mjs
+
+`javascript
+// floorplan/query.mjs: look things up in this folder's graph.json. Generated by build.mjs.
 // usage: node floorplan/query.mjs overview
 //        node floorplan/query.mjs find "<words>" [--kind module|file|endpoint|symbol] [--limit 15]
 //        node floorplan/query.mjs show <id>
@@ -6087,7 +6301,14 @@ try {
   console.log(JSON.stringify({ error: e.message }));
   process.exit(1);
 }
-\n`\n\n\n# assets/ui/05-theme.js\n\n`javascript\n// The Theme button: Auto (follows your device) -> Light -> Dark -> Auto. The choice is remembered on this
+
+`
+
+
+# assets/ui/05-theme.js
+
+`javascript
+// The Theme button: Auto (follows your device) -> Light -> Dark -> Auto. The choice is remembered on this
 // device. The theme itself is picked by a tiny script at the top of viewer.html, before anything is drawn,
 // so the page never flashes the wrong colours; this file only adds the button and keeps it in step.
 (() => {
@@ -6141,7 +6362,14 @@ try {
   window.addEventListener('floorplan-theme-change', show);
   show();
 })();
-\n`\n\n\n# assets/ui/06-blueprint.js\n\n`javascript\n// Blueprints: a map planned from a PRD or a description, before any code exists (graph.meta.blueprint,
+
+`
+
+
+# assets/ui/06-blueprint.js
+
+`javascript
+// Blueprints: a map planned from a PRD or a description, before any code exists (graph.meta.blueprint,
 // from scripts/plan.mjs). Cards get a dashed outline and the project name a "Blueprint" pill, the
 // overview says what it was planned from, and every planned part offers "Build this with Antigravity": a
 // ready prompt to build just that part, following the plan. Talks to the viewer only through window.Floorplan.
@@ -6243,7 +6471,14 @@ try {
     };
   });
 })();
-\n`\n\n\n# assets/ui/10-glossary.js\n\n`javascript\n// floorplan glossary: explains the technical words a non-developer meets on the map.
+
+`
+
+
+# assets/ui/10-glossary.js
+
+`javascript
+// floorplan glossary: explains the technical words a non-developer meets on the map.
 // The first time a known term appears in a description (details panel, board title area), it gets a
 // dotted underline; hovering or focusing it shows a one-sentence explanation. Off while
 // "Show technical detail" is on. Talks to the viewer only through window.Floorplan.
@@ -6437,7 +6672,14 @@ try {
   // initial pass, in case the first render/panel happened before this script ran
   if (document.readyState !== 'loading') queueMicrotask(() => { doPanel(); doContext(); });
 })();
-\n`\n\n\n# assets/ui/20-health.js\n\n`javascript\n// Health check panel: plain-language warnings from graph.health (lib/health.mjs) — leaked keys,
+
+`
+
+
+# assets/ui/20-health.js
+
+`javascript
+// Health check panel: plain-language warnings from graph.health (lib/health.mjs) — leaked keys,
 // endpoints anyone can call, unused and oversized files — each with "Show on map" and a ready
 // prompt to paste into Antigravity. Talks to the viewer only through window.Floorplan.
 (() => {
@@ -6712,7 +6954,14 @@ try {
     return { html: `<div class="sec"><h3>${PLAN ? 'Design review' : 'Health'} <span class="c">${hits.length}</span></h3>${hits.slice(0, 6).join('')}${hits.length > 6 ? `<div class="more" data-hc-open style="cursor:pointer">+${hits.length - 6} more in the ${CHECK}</div>` : ''}</div>`, bind: (el) => { bindIssues(el); el.querySelector('[data-hc-open]')?.addEventListener('click', openList); } };
   });
 })();
-\n`\n\n\n# assets/ui/25-recent.js\n\n`javascript\n// Recent work: what was just changed (graph.recent, from floorplan/recent-work.json), framed against
+
+`
+
+
+# assets/ui/25-recent.js
+
+`javascript
+// Recent work: what was just changed (graph.recent, from floorplan/recent-work.json), framed against
 // what the user asked for. Cards carry the green tag and hover note (core viewer); this adds the header
 // button that lays the changed cards out on one board, and the panel sections. Talks to the viewer only
 // through window.Floorplan.
@@ -6801,7 +7050,14 @@ try {
 
   window.FloorplanRecent = { show: showRecent, items, tasks };
 })();
-\n`\n\n\n# assets/ui/30-screens.js\n\n`javascript\n// Screens lens: start from a page people recognise ("the checkout page") and see everything behind it:
+
+`
+
+
+# assets/ui/30-screens.js
+
+`javascript
+// Screens lens: start from a page people recognise ("the checkout page") and see everything behind it:
 // the parts on it, the requests it makes, the server code that answers them, the data and outside
 // services involved. Data comes from graph.screens (scripts/lib/screens.mjs).
 (() => {
@@ -6942,7 +7198,14 @@ try {
   // other features (the tour) can open a screen's board
   window.FloorplanScreens = { list: screens, show: showScreen, openMenu };
 })();
-\n`\n\n\n# assets/ui/40-tour.js\n\n`javascript\n// "Start here": a calm one-minute tour on first open. What the app is, its main parts, the outside
+
+`
+
+
+# assets/ui/40-tour.js
+
+`javascript
+// "Start here": a calm one-minute tour on first open. What the app is, its main parts, the outside
 // services it leans on, then one real path traced end to end. Steps come from graph.tour (written
 // in architecture.json) or are built from the map itself.
 (() => {
@@ -7113,7 +7376,14 @@ try {
 
   window.FloorplanTour = { start, end, active };
 })();
-\n`\n\n\n# assets/viewer.html\n\n`html\n<!doctype html>
+
+`
+
+
+# assets/viewer.html
+
+`html
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -9466,4 +9736,5 @@ fontsReady.then(() => render({ after: () => { renderPanel(); emit('ready', {}); 
 <!--__UI_EXTENSIONS__-->
 </body>
 </html>
-\n`\n
+
+`
