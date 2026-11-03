@@ -18,10 +18,14 @@ npx floorplan-antigravity install
 
 That's it! It automatically installs the skill into your global Antigravity skills directory (`~/.gemini/config/skills/floorplan-antigravity`).
 
-### Install Options:
+### Install & Update Options:
 - **Global Install (Default):**
   ```bash
   npx floorplan-antigravity install
+  ```
+- **Update to Latest Version:**
+  ```bash
+  npx floorplan-antigravity update
   ```
 - **Current Workspace Only (`.agent/skills`):**
   ```bash
@@ -33,11 +37,14 @@ That's it! It automatically installs the skill into your global Antigravity skil
   ```
 - **Alternative (via Git):**
   ```bash
-  # macOS / Linux
+  # Install (macOS / Linux):
   git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git ~/.gemini/config/skills/floorplan-antigravity
 
-  # Windows (PowerShell)
+  # Install (Windows PowerShell):
   git clone https://github.com/Aniketkumar-01/floorplan-antigravity.git "$HOME\.gemini\config\skills\floorplan-antigravity"
+
+  # Update (Git):
+  git -C "$HOME\.gemini\config\skills\floorplan-antigravity" pull
   ```
 
 ---

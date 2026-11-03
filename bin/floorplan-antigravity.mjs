@@ -9,6 +9,7 @@ const [cmd = 'open', ...args] = process.argv.slice(2);
 
 const map = {
   install: 'install.mjs',
+  update: 'install.mjs',
   uninstall: 'install.mjs',
   scan: 'scan.mjs',
   build: 'build.mjs',
@@ -30,6 +31,7 @@ Usage:
 
 Commands:
   install   Install skill into Antigravity (global or --workspace)
+  update    Update installed skill to latest version
   uninstall Remove skill from Antigravity
   scan      Scan code, imports and routes
   build     Validate architecture and build map
