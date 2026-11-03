@@ -1,0 +1,8 @@
+# Root output map directory
+/floorplan/
+
+node_modules/
+.cache/
+*.log
+.DS_Store
+Thumbs.db

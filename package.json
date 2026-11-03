@@ -1,0 +1,35 @@
+{
+  "name": "floorplan-antigravity",
+  "version": "1.0.0",
+  "description": "Interactive, offline architecture maps for codebases in Antigravity",
+  "type": "module",
+  "main": "./bin/floorplan.mjs",
+  "bin": {
+    "floorplan": "./bin/floorplan.mjs"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "scan": "node skills/floorplan/scripts/scan.mjs",
+    "build": "node skills/floorplan/scripts/build.mjs",
+    "open": "node skills/floorplan/scripts/open.mjs",
+    "refresh": "node skills/floorplan/scripts/refresh.mjs"
+  },
+  "keywords": [
+    "antigravity",
+    "architecture",
+    "codebase",
+    "visualization",
+    "floorplan",
+    "ai-agent",
+    "gemini"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
