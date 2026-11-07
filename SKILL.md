@@ -92,10 +92,10 @@ Shows files and routes changed in recent commits or currently uncommitted. Write
 ```bash
 node <skill_dir>/scripts/open.mjs <root>
 ```
-Starts the local server in the background and opens `floorplan/index.html` in the user's browser.
+Opens `floorplan/index.html` in the user's browser. On Windows it opens the file directly (fully self-contained, no server needed). On macOS/Linux it starts a background server for live-reload; pass `--serve` on Windows to force server mode if running outside the AGY sandbox.
 
 **Report to the user:**
-- Provide the map URL (e.g. `http://127.0.0.1:4378`).
+- Provide the file path or URL shown in the output.
 - Summarize the architecture in 3–5 lines.
 - Highlight any **high-severity Health issues** (exposed secrets, unauthenticated endpoints).
 - Remind the user that cards have copyable **Fix with Antigravity** prompts and that asking questions can be done directly in their Antigravity chat.

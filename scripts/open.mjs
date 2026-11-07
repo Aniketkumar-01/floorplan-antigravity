@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Show the map to the user after a build or refresh. Reuses this map's server if it's running (open tabs
-// have already reloaded themselves), restarts it if serve.mjs changed, otherwise starts it in the
-// background and opens a browser tab. Prints the URL and how to stop it.
-// usage: node open.mjs [root] [--no-open] [--port N]
+// Open the floorplan map. On Windows (where the AGY sandbox kills background processes),
+// opens floorplan/index.html directly as a file — it is fully self-contained.
+// On other platforms, starts the serve.mjs background server for live-reload.
+// usage: node open.mjs [root] [--no-open] [--port N] [--serve]
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -12,13 +12,41 @@ import { parseArgs, mapDir } from './lib/common.mjs';
 const args = parseArgs(process.argv.slice(2));
 const root = path.resolve(args._[0] || '.');
 const dir = mapDir(root);
+const indexFile = path.join(dir, 'index.html');
 const serveFile = path.join(dir, 'serve.mjs');
 const stateFile = path.join(dir, '.cache', 'server.json');
 const rel = path.relative(process.cwd(), dir).replace(/\\/g, '/') || '.';
 const IDLE_MINUTES = 120;
 
-if (!fs.existsSync(path.join(dir, 'index.html')) || !fs.existsSync(serveFile)) {
+if (!fs.existsSync(indexFile)) {
   console.error('✗ No built map here yet. Run build.mjs first.');
+  process.exit(1);
+}
+
+function openBrowser(u) {
+  const [cmd, a] = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', u]] : process.platform === 'darwin' ? ['open', [u]] : ['xdg-open', [u]];
+  try { spawn(cmd, a, { stdio: 'ignore', detached: true, windowsHide: true }).unref(); return true; } catch { return false; }
+}
+
+// On Windows: open the HTML file directly (sandbox kills background node processes).
+// Use --serve flag to force server mode if running outside the sandbox.
+const useFile = process.platform === 'win32' && !args.serve;
+
+if (useFile) {
+  if (args['no-open']) {
+    console.log(`FLOORPLAN  file://${indexFile.replace(/\\/g, '/')}`);
+  } else {
+    const opened = openBrowser(indexFile);
+    console.log(`FLOORPLAN  ${rel}/index.html  (${opened ? 'opened in browser' : 'could not open browser — open the file yourself'})`);
+  }
+  console.log('ASK  ask questions directly in your Antigravity chat');
+  console.log(`FILE  ${indexFile}`);
+  process.exit(0);
+}
+
+// Non-Windows (or --serve): start background server
+if (!fs.existsSync(serveFile)) {
+  console.error(`✗ serve.mjs not found in ${rel}. Run build.mjs first.`);
   process.exit(1);
 }
 
@@ -31,19 +59,14 @@ async function api(s, p) {
     return r.ok ? await r.json() : null;
   } catch { return null; }
 }
-function openBrowser(u) {
-  const [cmd, a] = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', u]] : process.platform === 'darwin' ? ['open', [u]] : ['xdg-open', [u]];
-  try { spawn(cmd, a, { stdio: 'ignore', detached: true, windowsHide: true }).unref(); return true; } catch { return false; }
-}
-const hash = crypto.createHash('sha1').update(fs.readFileSync(serveFile)).digest('hex').slice(0, 12);
 
+const hash = crypto.createHash('sha1').update(fs.readFileSync(serveFile)).digest('hex').slice(0, 12);
 let s = readState();
 let status = s?.pid && alive(s.pid) ? await api(s, '/api/status') : null;
 let restarted = false;
 const hadTabs = status?.tabs > 0;
 
 if (status && status.hash !== hash) {
-  // a newer serve.mjs came with this build: restart so the map gets it; open tabs reconnect and reload
   try { process.kill(s.pid); } catch {}
   for (let i = 0; i < 20 && alive(s.pid); i++) await sleep(150);
   status = null;
@@ -52,41 +75,33 @@ if (status && status.hash !== hash) {
 
 if (!status) {
   const pass = ['port'].flatMap((k) => (args[k] ? ['--' + k, String(args[k])] : []));
-  if (!args.port && s?.port) pass.push('--port', String(s.port)); // keep the address people have open
+  if (!args.port && s?.port) pass.push('--port', String(s.port));
   fs.mkdirSync(path.dirname(stateFile), { recursive: true });
   const prev = s?.pid;
-  if (process.platform === 'win32') {
-    spawn('cmd.exe', ['/c', 'start', '""', '/b', process.execPath, serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
-      cwd: root, detached: true, stdio: 'ignore'
-    }).unref();
-  } else {
-    const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
-    spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
-      cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
-    }).unref();
-  }
-  // wait for the server to listen
+  const log = fs.openSync(path.join(dir, '.cache', 'server.log'), 'w');
+  spawn(process.execPath, [serveFile, '--no-open', '--idle-exit', String(IDLE_MINUTES), ...pass], {
+    cwd: root, detached: true, stdio: ['ignore', log, log], windowsHide: true,
+  }).unref();
   for (let i = 0; i < 100; i++) {
     await sleep(200);
     const n = readState();
     if (n?.pid && n.pid !== prev && alive(n.pid)) { s = n; status = await api(s, '/api/status'); if (status) break; }
   }
   if (!status) {
-    console.error(`✗ The map server didn't start. Its log is in ${rel}/.cache/server.log. The map still opens as a file: ${rel}/index.html`);
+    console.error(`✗ Server didn't start. Log: ${rel}/.cache/server.log\nFallback: open ${rel}/index.html directly.`);
     process.exit(1);
   }
-  // tabs from before a restart come back on their own within a few seconds
   if (restarted && hadTabs) for (let i = 0; i < 50 && !(status?.tabs > 0); i++) { await sleep(200); status = await api(s, '/api/status'); }
 }
 
 const health = await api(s, '/api/health');
 let shown;
-if (status.tabs > 0) shown = `already open in ${status.tabs === 1 ? 'a browser tab' : status.tabs + ' browser tabs'}, which reloaded with the latest map`;
-else if (args['no-open']) shown = 'not opened in a browser (--no-open): open the URL yourself';
-else shown = openBrowser(s.url) ? 'opened in the browser' : 'could not open a browser: open the URL yourself';
+if (status.tabs > 0) shown = `already open in ${status.tabs === 1 ? 'a browser tab' : status.tabs + ' browser tabs'}`;
+else if (args['no-open']) shown = 'not opened (--no-open)';
+else shown = openBrowser(s.url) ? 'opened in browser' : 'could not open browser — open the URL yourself';
 
 console.log(`FLOORPLAN  ${s.url}  (${shown})`);
 console.log(health?.cli
-  ? `ASK  works: questions run through ${health.engine}${health.version ? ' (' + health.version + ')' : ''}`
-  : 'ASK  ask questions directly in your Antigravity chat; the map itself works');
-console.log(`SERVER  runs in the background, updates open tabs when the map is rebuilt, and stops ${IDLE_MINUTES / 60} hours after the last tab closes. Stop it now: node ${rel}/serve.mjs --stop`);
+  ? `ASK  works via ${health.engine}${health.version ? ' (' + health.version + ')' : ''}`
+  : 'ASK  ask questions in your Antigravity chat; the map itself works');
+console.log(`SERVER  background, idle-exits after ${IDLE_MINUTES / 60}h. Stop: node ${rel}/serve.mjs --stop`);
