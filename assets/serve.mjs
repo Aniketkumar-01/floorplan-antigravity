@@ -52,6 +52,12 @@ if (has('stop')) {
   process.exit(0);
 }
 
+// If an older instance of this floorplan server is still running, stop it so we can rebind cleanly
+const prevInstance = readState();
+if (prevInstance?.pid && prevInstance.pid !== process.pid) {
+  try { process.kill(prevInstance.pid); } catch {}
+}
+
 // Health issues marked "not a problem" on the map
 const dismissedFile = path.join(here, 'health-dismissed.json');
 const readDismissed = () => { try { const { dismissed } = JSON.parse(fs.readFileSync(dismissedFile, 'utf8')); return Array.isArray(dismissed) ? dismissed : []; } catch { return []; } };
@@ -239,8 +245,16 @@ const server = http.createServer((req, res) => {
 });
 
 let port = wantPort;
+let retried = false;
 server.on('error', (e) => {
-  if (e.code === 'EADDRINUSE' && port < wantPort + 20) { port++; server.listen(port); return; }
+  if (e.code === 'EADDRINUSE') {
+    if (!retried && port === wantPort) {
+      retried = true;
+      setTimeout(() => server.listen(port), 250);
+      return;
+    }
+    if (port < wantPort + 20) { port++; server.listen(port); return; }
+  }
   console.error(`✗ Couldn't start the map server: ${e.message}`);
   process.exit(1);
 });

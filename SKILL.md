@@ -28,7 +28,7 @@ If the user wants to plan an unbuilt system from a PRD, spec, or description:
    node <skill_dir>/scripts/plan.mjs <root>
    node <skill_dir>/scripts/build.mjs <root>
    ```
-6. **Open the map:** `node <skill_dir>/scripts/open.mjs <root>`
+6. **Start Live Preview:** Run `node <root>/floorplan/serve.mjs` as a background daemon process (`IsDaemon: true`, `BypassSandbox: true`, `WaitMsBeforeAsync: 1000`). Antigravity IDE will automatically open `http://127.0.0.1:4378` in the Live Preview pane.
 7. **Report:** Provide the URL, the system shape in 3–5 lines, chosen stack, key assumptions, and open questions from the design review. Each card provides a **Build this with Antigravity** prompt.
 
 ---
@@ -88,14 +88,17 @@ node <skill_dir>/scripts/recent.mjs <root>
 ```
 Shows files and routes changed in recent commits or currently uncommitted. Write `floorplan/recent-work.json` explaining *why* those changes were made. Run `build.mjs` to highlight them on the map.
 
-### 8. Open Map & Report
+### 8. Start Live Preview & Report
+Start the floorplan server in the background so it stays alive for the Antigravity Live Preview pane and external browser.
+Start it as a daemon background process (`IsDaemon: true`, `BypassSandbox: true`, `WaitMsBeforeAsync: 1000`):
 ```bash
-node <skill_dir>/scripts/open.mjs <root>
+node <root>/floorplan/serve.mjs
 ```
-Opens `floorplan/index.html` in the user's browser. On Windows it opens the file directly (fully self-contained, no server needed). On macOS/Linux it starts a background server for live-reload; pass `--serve` on Windows to force server mode if running outside the AGY sandbox.
+(If port 4378 is already active from an earlier build, `serve.mjs` automatically reloads all open tabs.)
 
 **Report to the user:**
-- Provide the file path or URL shown in the output.
+- Provide the map URL: `http://127.0.0.1:4378` (Antigravity IDE automatically displays it in the Live Preview pane).
+- Mention that an offline copy is also saved at `floorplan/index.html`.
 - Summarize the architecture in 3–5 lines.
 - Highlight any **high-severity Health issues** (exposed secrets, unauthenticated endpoints).
-- Remind the user that cards have copyable **Fix with Antigravity** prompts and that asking questions can be done directly in their Antigravity chat.
+- Remind the user that cards have copyable **Fix with Antigravity** prompts and in-map AI chat.
